@@ -3,7 +3,7 @@
       
   <modelVersion>4.0.0</modelVersion>
       
-  <groupId>com.liveperson.infra</groupId>
+  <groupId>org</groupId>
       
   <artifactId>liqr</artifactId>
       
