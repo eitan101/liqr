@@ -1,0 +1,166 @@
+<html>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="bower_components/jquery/dist/jquery.min.js"></script>-->
+    <script src="bower_components/moment/min/moment.min.js"></script>
+    <script src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <body>
+        <script>
+            var websocket;
+            var dataArrived;
+            var counter;
+            var maxval;
+            function connect() {
+                var utctime = moment($("#val").val()).tz("UTC").format("YYYY-MM-DD[T]HH:mm");
+                var wsUrl = $("#url").val() + "?val=" + utctime;
+                if (websocket)
+                    websocket.close();
+
+                websocket = new WebSocket(wsUrl);
+                dataArrived = false;
+                websocket.onopen = function() {
+                    console.log("opened");
+                };
+                websocket.onclose = function() {
+                    console.log("closed");
+                };
+                websocket.onerror = function() {
+                    console.log("error");
+                };
+                websocket.onmessage = function(event) {
+                    if (!dataArrived) { // reset the table on first data
+                        $('table').html("<tr><th>Key</th><th>Val</th><th>Time</th>/tr>");
+                        dataArrived = true;
+                        counter = 0;
+                        maxval = 0;
+                        $("#next").addClass("disabled");
+                    }
+
+                    $.each($.parseJSON(event.data), function(i, v) {
+                        if (v.val.newVal) {
+//                            var obj = JSON.parse(v.val.newVal);
+                            var obj = v.val.newVal;
+                            var $elem = $('#' + v.key);
+                            var classname;
+                            if (!$elem.length) {
+                                counter++;
+                                if (counter > 60)
+                                    scheduleUpdate();
+                                $('#rowcount').text(counter + " rows");
+                                $elem = $('<tr/>').attr("id", v.key);
+                                classname = "success";
+                            } else {
+                                classname = "info";
+                                $elem.detach();
+                            }
+                            if (obj.due > maxval) {
+                                maxval = obj.due;
+                                $("#next").removeClass("disabled");
+                                $('#maxval').text("Until " + moment(maxval * 1000).format('YYYY-MM-DD HH:mm'));
+                            }
+                            $elem.addClass(classname)
+                                    .html($('<td/>').html(v.key))
+                                    .append($('<td/>').html(JSON.stringify(v.val.newVal)))
+                                    .attr("sortBy", obj.due)
+                                    .append($('<td/>').html(moment(obj.due * 1000).format('YYYY-MM-DD HH:mm')));
+                            var added = false;
+                            $('tbody tr').each(function() {
+                                if (!added && $elem.attr("sortBy") < $(this).attr("sortBy")) {
+                                    $elem.insertBefore($(this));
+                                    added = true;
+                                }
+                            });
+                            if (!added)
+                                $elem.appendTo($('table'));
+
+                            setTimeout(function() {
+                                $elem.removeClass(classname);
+                            }, 1000);
+                        } else {
+                            $('#' + v.key).addClass("danger");
+                            setTimeout(function() {
+                                counter--;
+                                if (counter < 40)
+                                    scheduleUpdate();
+                                $('#rowcount').text(counter + " rows");
+                                $('#' + v.key).remove();
+                            }, 1000);
+                        }
+                    });
+                };
+            }
+
+            function sortObject(obj) {
+                return Object.keys(obj).sort().reduce(function(result, key) {
+                    result[key] = obj[key];
+                    return result;
+                }, {});
+            }
+
+            var task;
+            function scheduleUpdate() {
+                if (task)
+                    clearTimeout(task);
+                task = setTimeout(connect, 100);
+            }
+
+            $(document).ready(function() {
+                $("#url").val("ws://" + window.location.host + "/ws");
+                $("#url").change(scheduleUpdate);
+                $("#val").change(scheduleUpdate);
+                $("#next").click(function() {
+                    $("#val").val(moment(maxval * 1000).format('YYYY-MM-DD[T]HH:mm'));
+                    connect();
+                });
+
+                var autoTask;
+                $("#auto").click(function() {
+                    if ($(this).prop('checked')) {
+                        autoTask = setInterval(function() {
+                            $("#val").val(moment($("#val").val()).add(1, "minutes").format("YYYY-MM-DD[T]HH:mm"));
+                            connect();
+                        }, 60000);
+                    } else {
+                        clearInterval(autoTask);
+                    }
+                });
+                $("#val").val(moment().format('YYYY-MM-DD[T]HH:mm'));
+                connect();
+            });
+
+        </script>
+
+        <h2>LiveQuery <span class='tot_studs'></span></h2>
+
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="url">Url:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="url" placeholder="ws://hostanem:port" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="val">Value:</label>
+                <div class="col-sm-10"> 
+                    <input type="datetime-local" class="form-control" id="val">
+                </div>
+            </div>
+            <div class="form-group"><div class="col-sm-offset-2 col-sm-10"><div class="checkbox">
+                        <label><input id="auto" type="checkbox" value="">Auto advance (every minute)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <p id="rowcount"></p>
+                    <p id="maxval"></p>
+                    <button id="next" type="button" class="btn btn-default disabled">Next</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table-hover table">
+        </table>
+    </body>
+</html>

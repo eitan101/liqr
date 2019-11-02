@@ -1,0 +1,72 @@
+<html>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <body>
+        <script>
+            var ajax;
+            function update() {
+                var $tab = $('table');
+                if (ajax && ajax.readystate != 4) {
+                    ajax.abort();
+                }
+                ajax = $.getJSON($("#url").val() + "?" +
+//                        "key=" + $("#key").val() + "&" +
+                        "val=" + $("#val").val() +
+                        "&callback=?", function(res0) {
+                            res = sortObject(res0);
+                            $('table').html("<tr><th>Key</th><th>Val</th>/tr>");
+                            $.each(res, function(i, v) {
+                                $tr = $('<tr/>');
+                                $('<td/>').html(v.key).appendTo($tr);
+                                $('<td/>').html(v.val || "").appendTo($tr);
+                                $tr.appendTo($('table'));
+                            });
+                        });
+            }
+
+            function sortObject(obj) {
+                return Object.keys(obj).sort().reduce(function(result, key) {
+                    result[key] = obj[key];
+                    return result;
+                }, {});
+            }
+
+
+            var task;
+            function scheduleUpdate() {
+                if (task)
+                    clearTimeout(task);
+                task = setTimeout(update, 100);
+            }
+
+            $(document).ready(function() {
+                $("#url").val("http://" + window.location.host + "/query");
+                $("#url").keyup(scheduleUpdate);
+                $("#val").keyup(scheduleUpdate);
+                setInterval(update, 3000);
+                update();
+            });
+
+        </script>
+
+        <h2>Streaming Query <span class='tot_studs'></span></h2>
+
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="url">Key:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="url" placeholder="http://hostanem:port" value="http://192.168.99.100:8080">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="val">Value:</label>
+                <div class="col-sm-10"> 
+                    <input class="form-control" id="val" placeholder="value filter" value='k","age":38'>
+                </div>
+            </div>
+        </form>
+
+        <table class="table-hover table">
+        </table>
+    </body>
+</html>
