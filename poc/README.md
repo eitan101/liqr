@@ -7,7 +7,8 @@ The client subscribes to a query that contains entities between dates.
 run:
 
 ```sh
-mvn package
+alias build-machine='docker run --rm -it -v $HOME/.m2repo:/root/.m2/repository -v $PWD:/my -p 8080:8080 -w /my maven:3.6.2-jdk-11-slim'
+build-machine mvn package
 ```
 
 ## Running it
@@ -15,7 +16,7 @@ mvn package
 run:
 
 ```sh
-java -jar poc/target/liqr-poc-0.1-SNAPSHOT.jar server
+build-machine java -jar poc/target/liqr-poc-0.1-SNAPSHOT.jar server
 ```
 
 That's all.
