@@ -31,4 +31,5 @@ You can also take a look at the websocket version of LiveQuery:
 http://localhost:8080/static/demoWs.htm
 
 You can see a screencast of this demo here:
+
 [![Alt text](https://img.youtube.com/vi/DQk1_owxqcE/0.jpg)](https://www.youtube.com/watch?v=DQk1_owxqcE)
