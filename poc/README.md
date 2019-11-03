@@ -30,4 +30,4 @@ http://localhost:8080/query?val=2
 You can also take a look at the websocket version of LiveQuery:
 http://localhost:8080/static/demoWs.htm
 
-You can see a screencast of this demo in https://www.youtube.com/watch?v=fV0-Jq9WMWY
+You can see a screencast of this demo in https://youtu.be/DQk1_owxqcE
