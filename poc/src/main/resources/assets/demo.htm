@@ -10,7 +10,6 @@
                     ajax.abort();
                 }
                 ajax = $.getJSON($("#url").val() + "?" +
-//                        "key=" + $("#key").val() + "&" +
                         "val=" + $("#val").val() +
                         "&callback=?", function(res0) {
                             res = sortObject(res0);
@@ -18,7 +17,7 @@
                             $.each(res, function(i, v) {
                                 $tr = $('<tr/>');
                                 $('<td/>').html(v.key).appendTo($tr);
-                                $('<td/>').html(v.val || "").appendTo($tr);
+                                $('<td/>').html(JSON.stringify(v.val)).appendTo($tr);
                                 $tr.appendTo($('table'));
                             });
                         });
@@ -53,15 +52,15 @@
 
         <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label class="control-label col-sm-2" for="url">Key:</label>
+                <label class="control-label col-sm-2" for="url">URL:</label>
                 <div class="col-sm-10">
-                    <input class="form-control" id="url" placeholder="http://hostanem:port" value="http://192.168.99.100:8080">
+                    <input class="form-control" id="url" placeholder="http://hostanem:port" value="http://127.0.0.1:8080/query">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2" for="val">Value:</label>
                 <div class="col-sm-10"> 
-                    <input class="form-control" id="val" placeholder="value filter" value='k","age":38'>
+                    <input class="form-control" id="val" placeholder="value filter" value='120'>
                 </div>
             </div>
         </form>

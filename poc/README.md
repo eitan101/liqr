@@ -21,8 +21,10 @@ build-machine java -jar poc/target/liqr-poc-0.1-SNAPSHOT.jar server
 
 That's all.
 
-You can then access the REST api. For example in order to see all objects with timestamp in the next 2 minutes:
-http://localhost:8080/query?val=2
+You can then access the REST api. For example in order to see all objects with timestamp in the next 200 minutes:
+http://localhost:8080/query?val=200
+
+Or see polling UI in: http://localhost:8080/static/demo.htm
 
 [//]: # (or using simple UI using rest:)
 [//]: # (http://192.168.99.100:8080/static/demo.htm)
