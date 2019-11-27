@@ -32,4 +32,6 @@ Or see polling UI in: http://localhost:8080/static/demo.htm
 You can also take a look at the websocket version of LiveQuery:
 http://localhost:8080/static/demoWs.htm
 
-You can see a screencast of this demo in https://www.youtube.com/watch?v=fV0-Jq9WMWY
+You can see a screencast of this demo here:
+
+[![Alt text](https://img.youtube.com/vi/DQk1_owxqcE/0.jpg)](https://www.youtube.com/watch?v=DQk1_owxqcE)
