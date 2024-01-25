@@ -11,6 +11,8 @@ In a live query the client sends the query, get inital results, and then keeps g
 
 ## Getting started
 
+The following insructions can show you a basic usage of the live query. More comprehensive example can be found in the [POC folder](poc).
+
 You can build and run the test using docker-maven:
 ```
 alias build-machine='docker run --rm -it -v $HOME/.m2repo:/root/.m2/repository -v $PWD:/my -p 8080:8080 -w /my maven:3.6.2-jdk-11-slim'
