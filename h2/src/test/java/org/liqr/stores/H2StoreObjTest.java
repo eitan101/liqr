@@ -37,7 +37,7 @@ public class H2StoreObjTest {
     public void basic() {
         H2Datastore<MyStoredObj, H2Query> ds
                 = new H2Datastore<>(JdbcConnectionPool.create("jdbc:h2:mem:test", "user", "pass"),
-                        s -> s.toString(), MyStoredObj::fromJSON, "default"
+                        s -> s.toString(), MyStoredObj::fromJSON, "myTable"
                         , H2Field.of("mult2", "int", v -> v.role.name())
                 );
         ds.init();

@@ -44,7 +44,7 @@ public class H2StoreTest {
     public void basic() {
         H2Datastore<Integer, H2Query> ds
                 = new H2Datastore<>(JdbcConnectionPool.create("jdbc:h2:mem:test", "user", "pass"),
-                        s -> s.toString(), Integer::parseInt, "default",
+                        s -> s.toString(), Integer::parseInt, "myTable",
                         H2Field.of("mult2", "int", v -> Integer.toString(v * 2)));
         ds.init();
 
