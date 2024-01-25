@@ -34,7 +34,7 @@ import org.skife.jdbi.v2.Handle;
 
 public class MyStore extends H2Datastore<MyObj, H2Query> {
     public MyStore(JdbcConnectionPool jcp,MetricRegistry metrics) {
-        super(jcp,(o) -> o.toJSON(), MyObj::fromJSON, "default", H2Field.of("due", "bigint", (v) -> v.due.toString()));
+        super(jcp,(o) -> o.toJSON(), MyObj::fromJSON, "myTable", H2Field.of("due", "bigint", (v) -> v.due.toString()));
         metrics.register("db_total", (Gauge<Long>) this::total);
     }
 
