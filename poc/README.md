@@ -3,19 +3,19 @@ This POC how to build a web app that implement a live query.
 The POC creates a stream of random entity changes and applies it to the data store.
 The client subscribes to a query that contains entities between dates.
 
-## Building it
+## Building and runnint it
 run:
 
 ```sh
+# clone
+git clone https://github.com/eitan101/liqr.git
+cd liqr
 alias build-machine='docker run --rm -it -v $HOME/.m2repo:/root/.m2/repository -v $PWD:/my -p 8080:8080 -w /my maven:3.6.2-jdk-11-slim'
+
+# build it
 build-machine mvn package
-```
 
-## Running it
-
-run:
-
-```sh
+# run it
 build-machine java -jar poc/target/liqr-poc-0.1-SNAPSHOT.jar server
 ```
 
@@ -35,3 +35,8 @@ http://localhost:8080/static/demoWs.htm
 You can see a screencast of this demo here:
 
 [![Alt text](https://img.youtube.com/vi/DQk1_owxqcE/0.jpg)](https://www.youtube.com/watch?v=DQk1_owxqcE)
+
+You can see a screencast (hebrew) of code review for this demo here:
+
+[![Alt text](https://img.youtube.com/vi/DQk1_owxqcE/0.jpg)](https://youtu.be/eyP2OTYNRA0)
+
